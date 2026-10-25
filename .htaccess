@@ -1,0 +1,29 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Serve existing files inside /public directly (assets, build, images)
+    RewriteCond %{REQUEST_URI} ^/?public/ [NC]
+    RewriteRule ^public/(.*)$ public/$1 [L]
+
+    # Send everything else to the Laravel front controller in /public
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ public/index.php [L]
+</IfModule>
+
+# Block direct access to sensitive files at project root
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "(artisan|composer\.(json|lock)|package(-lock)?\.json|pnpm-lock\.yaml|vite\.config\.ts|phpunit\.xml|phpstan\.neon|pint\.json|tsconfig\.json|components\.json|\.env.*|\.git.*|\.editorconfig|\.gitattributes|\.npmrc)$">
+    Require all denied
+</FilesMatch>
