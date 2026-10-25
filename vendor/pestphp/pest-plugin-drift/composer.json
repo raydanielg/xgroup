@@ -1,0 +1,62 @@
+{
+    "name": "pestphp/pest-plugin-drift",
+    "description": "The Pest Drift Plugin",
+    "keywords": [
+        "php",
+        "framework",
+        "pest",
+        "unit",
+        "test",
+        "testing",
+        "laravel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "nikic/php-parser": "^5.8.0",
+        "pestphp/pest": "^5.0.0",
+        "symfony/finder": "^8.1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pest\\Drift\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "pestphp/pest-dev-tools": "^5.0.0"
+    },
+    "conflict": {
+        "pestphp/pest": "<5.0.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "lint": "pint",
+        "test:lint": "pint --test",
+        "test:unit": "pest --colors=always",
+        "test": [
+            "@test:refacto",
+            "@test:lint",
+            "@test:unit"
+        ]
+    },
+    "extra": {
+        "pest": {
+            "plugins": [
+                "Pest\\Drift\\Plugin"
+            ]
+        }
+    }
+}
