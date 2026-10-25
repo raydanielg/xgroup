@@ -28,8 +28,7 @@ export default function Profile({
 
     useStatusToast(status, {
         match: 'verification-link-sent',
-        message:
-            'A new verification link has been sent to your email address.',
+        message: 'A new verification link has been sent to your email address.',
     });
 
     return (

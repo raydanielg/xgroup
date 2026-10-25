@@ -1,4 +1,8 @@
-import { LockPasswordIcon, ViewIcon, ViewOffIcon } from '@hugeicons/core-free-icons';
+import {
+    LockPasswordIcon,
+    ViewIcon,
+    ViewOffIcon,
+} from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import type { ComponentProps, Ref } from 'react';
 import { useState } from 'react';
@@ -29,7 +33,9 @@ export default function PasswordInput({
             <InputGroupAddon align="inline-end">
                 <InputGroupButton
                     onClick={() => setShowPassword((prev) => !prev)}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={
+                        showPassword ? 'Hide password' : 'Show password'
+                    }
                     tabIndex={-1}
                 >
                     <HugeiconsIcon

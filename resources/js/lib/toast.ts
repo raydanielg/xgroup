@@ -6,9 +6,7 @@ function collectMessages(value: unknown, messages: string[]): void {
     } else if (Array.isArray(value)) {
         value.forEach((item) => collectMessages(item, messages));
     } else if (value && typeof value === 'object') {
-        Object.values(value).forEach((item) =>
-            collectMessages(item, messages),
-        );
+        Object.values(value).forEach((item) => collectMessages(item, messages));
     }
 }
 

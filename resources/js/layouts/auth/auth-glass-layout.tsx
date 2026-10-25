@@ -21,7 +21,7 @@ export default function AuthGlassLayout({
 
             <Link
                 href={home()}
-                className="absolute start-6 top-6 z-10 flex animate-in items-center gap-3 fill-mode-both text-white drop-shadow-md fade-in slide-in-from-top-4 duration-700 sm:start-10 sm:top-8"
+                className="absolute start-6 top-6 z-10 flex animate-in items-center gap-3 text-white drop-shadow-md duration-700 fill-mode-both fade-in slide-in-from-top-4 sm:start-10 sm:top-8"
             >
                 <AppLogoIcon className="size-9 fill-current" />
                 <span className="text-lg font-semibold tracking-wide">
@@ -41,7 +41,7 @@ export default function AuthGlassLayout({
                 {children}
             </div>
 
-            <p className="absolute start-6 bottom-5 z-10 animate-in text-xs text-white/60 fill-mode-both fade-in delay-300 duration-1000 sm:start-10">
+            <p className="absolute start-6 bottom-5 z-10 animate-in text-xs text-white/60 delay-300 duration-1000 fill-mode-both fade-in sm:start-10">
                 © {new Date().getFullYear()} {name}. All rights reserved.
             </p>
         </div>
