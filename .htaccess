@@ -9,21 +9,17 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Serve existing files inside /public directly (assets, build, images)
-    RewriteCond %{REQUEST_URI} ^/?public/ [NC]
-    RewriteRule ^public/(.*)$ public/$1 [L]
-
-    # Send everything else to the Laravel front controller in /public
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*)$ public/index.php [L]
+    # Route all requests into /public — the real Laravel front controller
+    # lives there and handles the rest via public/.htaccess
+    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
 
-# Block direct access to sensitive files at project root
+# Deny direct access to hidden files (.env, .git, .htaccess itself, ...)
 <FilesMatch "^\.">
     Require all denied
 </FilesMatch>
 
+# Deny direct access to project/config files at the root
 <FilesMatch "(artisan|composer\.(json|lock)|package(-lock)?\.json|pnpm-lock\.yaml|vite\.config\.ts|phpunit\.xml|phpstan\.neon|pint\.json|tsconfig\.json|components\.json|\.env.*|\.git.*|\.editorconfig|\.gitattributes|\.npmrc)$">
     Require all denied
 </FilesMatch>
