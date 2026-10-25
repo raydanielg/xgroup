@@ -15,6 +15,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { toastFormErrors } from '@/lib/toast';
 
 export default function DeleteUser() {
     const passwordInput = useRef<HTMLInputElement>(null);
@@ -59,7 +60,10 @@ export default function DeleteUser() {
                             options={{
                                 preserveScroll: true,
                             }}
-                            onError={() => passwordInput.current?.focus()}
+                            onError={(errors) => {
+                                toastFormErrors(errors);
+                                passwordInput.current?.focus();
+                            }}
                             resetOnSuccess
                             className="space-y-6"
                         >

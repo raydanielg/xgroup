@@ -4,6 +4,7 @@ import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { toastFormErrors } from '@/lib/toast';
 import { store } from '@/routes/password/confirm';
 import {
     index as confirmOptions,
@@ -26,7 +27,11 @@ export default function ConfirmPassword() {
                 separator="Or confirm with password"
             />
 
-            <Form {...store.form()} resetOnSuccess={['password']}>
+            <Form
+                {...store.form()}
+                resetOnSuccess={['password']}
+                onError={toastFormErrors}
+            >
                 {({ processing, errors }) => (
                     <div className="space-y-6">
                         <div className="grid gap-2">

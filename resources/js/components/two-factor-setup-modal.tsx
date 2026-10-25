@@ -2,7 +2,7 @@ import { Form } from '@inertiajs/react';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { Check, Copy, ScanLine } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import AlertError from '@/components/alert-error';
+import { toast } from 'sonner';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,6 +21,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useAppearance } from '@/hooks/use-appearance';
 import { useClipboard } from '@/hooks/use-clipboard';
 import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
+import { toastFormErrors } from '@/lib/toast';
 import { confirm } from '@/routes/two-factor';
 
 function GridScanIcon() {
@@ -54,25 +55,28 @@ function TwoFactorSetupStep({
     manualSetupKey,
     buttonText,
     onNextStep,
-    errors,
 }: {
     qrCodeSvg: string | null;
     manualSetupKey: string | null;
     buttonText: string;
     onNextStep: () => void;
-    errors: string[];
 }) {
     const { resolvedAppearance } = useAppearance();
     const [copiedText, copy] = useClipboard();
     const IconComponent = copiedText === manualSetupKey ? Check : Copy;
 
+    const copySetupKey = () => {
+        if (!manualSetupKey) {
+            return;
+        }
+
+        void copy(manualSetupKey);
+        toast.success('Setup key copied to clipboard.');
+    };
+
     return (
         <>
-            {errors?.length ? (
-                <AlertError errors={errors} />
-            ) : (
-                <>
-                    <div className="mx-auto flex max-w-md overflow-hidden">
+            <div className="mx-auto flex max-w-md overflow-hidden">
                         <div className="mx-auto aspect-square w-64 rounded-lg border border-border">
                             <div className="z-10 flex h-full w-full items-center justify-center p-5">
                                 {qrCodeSvg ? (
@@ -123,7 +127,7 @@ function TwoFactorSetupStep({
                                         className="h-full w-full bg-background p-3 text-foreground outline-none"
                                     />
                                     <button
-                                        onClick={() => copy(manualSetupKey)}
+                                        onClick={copySetupKey}
                                         className="border-l border-border px-3 hover:bg-muted"
                                     >
                                         <IconComponent className="w-4" />
@@ -132,8 +136,6 @@ function TwoFactorSetupStep({
                             )}
                         </div>
                     </div>
-                </>
-            )}
         </>
     );
 }
@@ -157,7 +159,11 @@ function TwoFactorVerificationStep({
     return (
         <Form
             {...confirm.form()}
-            onSuccess={() => onClose()}
+            onSuccess={() => {
+                onClose();
+                toast.success('Two-factor authentication enabled.');
+            }}
+            onError={toastFormErrors}
             resetOnError
             resetOnSuccess
         >
@@ -238,7 +244,6 @@ type Props = {
     manualSetupKey: string | null;
     clearSetupData: () => void;
     fetchSetupData: () => Promise<void>;
-    errors: string[];
 };
 
 export default function TwoFactorSetupModal({
@@ -250,7 +255,6 @@ export default function TwoFactorSetupModal({
     manualSetupKey,
     clearSetupData,
     fetchSetupData,
-    errors,
 }: Props) {
     const [showVerificationStep, setShowVerificationStep] =
         useState<boolean>(false);
@@ -345,7 +349,6 @@ export default function TwoFactorSetupModal({
                             manualSetupKey={manualSetupKey}
                             buttonText={modalConfig.buttonText}
                             onNextStep={handleModalNextStep}
-                            errors={errors}
                         />
                     )}
                 </div>

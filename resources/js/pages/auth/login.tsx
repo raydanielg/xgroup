@@ -1,16 +1,27 @@
-import { Form, Head } from '@inertiajs/react';
+import {
+    Login03Icon,
+    Mail01Icon,
+    UserAdd01Icon,
+} from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Form, Head, Link } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from '@/components/ui/input-group';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { useStatusToast } from '@/hooks/use-status-toast';
+import { toastFormErrors } from '@/lib/toast';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-import PasskeyVerify from '@/components/passkey-verify';
 
 type Props = {
     status?: string;
@@ -18,23 +29,27 @@ type Props = {
 };
 
 export default function Login({ status, canResetPassword }: Props) {
+    useStatusToast(status);
+
     return (
         <>
             <Head title="Log in" />
 
-            <PasskeyVerify />
-
             <Form
                 {...store.form()}
                 resetOnSuccess={['password']}
-                className="flex flex-col gap-6"
+                onError={toastFormErrors}
+                className="flex flex-col gap-5"
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
+                        <div className="grid gap-2">
+                            <Label htmlFor="email">Email Address</Label>
+                            <InputGroup>
+                                <InputGroupAddon>
+                                    <HugeiconsIcon icon={Mail01Icon} />
+                                </InputGroupAddon>
+                                <InputGroupInput
                                     id="email"
                                     type="email"
                                     name="email"
@@ -42,76 +57,93 @@ export default function Login({ status, canResetPassword }: Props) {
                                     autoFocus
                                     tabIndex={1}
                                     autoComplete="email"
-                                    placeholder="email@example.com"
+                                    placeholder="you@example.com"
                                 />
-                                <InputError message={errors.email} />
-                            </div>
+                            </InputGroup>
+                            <InputError message={errors.email} />
+                        </div>
 
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    {canResetPassword && (
-                                        <TextLink
-                                            href={request()}
-                                            className="ml-auto text-sm"
-                                            tabIndex={5}
-                                        >
-                                            Forgot your password?
-                                        </TextLink>
-                                    )}
-                                </div>
-                                <PasswordInput
-                                    id="password"
-                                    name="password"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="current-password"
-                                    placeholder="Password"
-                                />
-                                <InputError message={errors.password} />
-                            </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="password">Password</Label>
+                            <PasswordInput
+                                id="password"
+                                name="password"
+                                required
+                                tabIndex={2}
+                                autoComplete="current-password"
+                                placeholder="Enter your password"
+                            />
+                            <InputError message={errors.password} />
+                        </div>
 
-                            <div className="flex items-center space-x-3">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
                                 <Checkbox
                                     id="remember"
                                     name="remember"
                                     tabIndex={3}
                                 />
-                                <Label htmlFor="remember">Remember me</Label>
+                                <Label
+                                    htmlFor="remember"
+                                    className="font-normal"
+                                >
+                                    Remember me
+                                </Label>
                             </div>
-
-                            <Button
-                                type="submit"
-                                className="mt-4 w-full"
-                                tabIndex={4}
-                                disabled={processing}
-                                data-test="login-button"
-                            >
-                                {processing && <Spinner />}
-                                Log in
-                            </Button>
+                            {canResetPassword && (
+                                <TextLink
+                                    href={request()}
+                                    className="text-xs text-slate-600 hover:text-slate-800"
+                                    tabIndex={5}
+                                >
+                                    Forgot password?
+                                </TextLink>
+                            )}
                         </div>
 
-                        <div className="text-center text-sm text-muted-foreground">
-                            Don't have an account?{' '}
-                            <TextLink href={register()} tabIndex={5}>
-                                Sign up
-                            </TextLink>
-                        </div>
+                        <Button
+                            type="submit"
+                            size="lg"
+                            className="mt-1 w-full rounded bg-slate-800 text-white hover:bg-slate-700"
+                            tabIndex={4}
+                            disabled={processing}
+                            data-test="login-button"
+                        >
+                            {processing ? (
+                                <Spinner />
+                            ) : (
+                                <HugeiconsIcon
+                                    icon={Login03Icon}
+                                    data-icon="inline-start"
+                                />
+                            )}
+                            Sign In
+                        </Button>
                     </>
                 )}
             </Form>
 
-            {status && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
+            <div className="mt-5">
+                <Button
+                    variant="outline"
+                    size="lg"
+                    className="w-full rounded border-gray-200 text-gray-700 hover:bg-gray-100"
+                    asChild
+                >
+                    <Link href={register()} tabIndex={6}>
+                        <HugeiconsIcon
+                            icon={UserAdd01Icon}
+                            data-icon="inline-start"
+                        />
+                        Create an account
+                    </Link>
+                </Button>
+            </div>
         </>
     );
 }
 
 Login.layout = {
-    title: 'Log in to your account',
-    description: 'Enter your email and password below to log in',
+    title: 'Welcome Back',
+    description: 'Sign in to continue to your account',
 };

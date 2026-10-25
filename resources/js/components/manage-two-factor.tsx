@@ -1,6 +1,7 @@
 import { Form } from '@inertiajs/react';
 import { ShieldCheck } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import Heading from '@/components/heading';
 import TwoFactorRecoveryCodes from '@/components/two-factor-recovery-codes';
 import TwoFactorSetupModal from '@/components/two-factor-setup-modal';
@@ -27,7 +28,6 @@ export default function ManageTwoFactor(props: Props) {
         fetchSetupData,
         recoveryCodesList,
         fetchRecoveryCodes,
-        errors,
     } = useTwoFactorAuth();
     const [showSetupModal, setShowSetupModal] = useState<boolean>(false);
     const prevTwoFactorEnabled = useRef(twoFactorEnabled);
@@ -60,7 +60,19 @@ export default function ManageTwoFactor(props: Props) {
                     </p>
 
                     <div className="relative inline">
-                        <Form {...disable.form()}>
+                        <Form
+                            {...disable.form()}
+                            onSuccess={() =>
+                                toast.success(
+                                    'Two-factor authentication disabled.',
+                                )
+                            }
+                            onError={() =>
+                                toast.error(
+                                    'Failed to disable two-factor authentication.',
+                                )
+                            }
+                        >
                             {({ processing }) => (
                                 <Button
                                     variant="destructive"
@@ -76,7 +88,6 @@ export default function ManageTwoFactor(props: Props) {
                     <TwoFactorRecoveryCodes
                         recoveryCodesList={recoveryCodesList}
                         fetchRecoveryCodes={fetchRecoveryCodes}
-                        errors={errors}
                     />
                 </div>
             ) : (
@@ -98,6 +109,11 @@ export default function ManageTwoFactor(props: Props) {
                             <Form
                                 {...enable.form()}
                                 onSuccess={() => setShowSetupModal(true)}
+                                onError={() =>
+                                    toast.error(
+                                        'Failed to enable two-factor authentication.',
+                                    )
+                                }
                             >
                                 {({ processing }) => (
                                     <Button type="submit" disabled={processing}>
@@ -119,7 +135,6 @@ export default function ManageTwoFactor(props: Props) {
                 manualSetupKey={manualSetupKey}
                 clearSetupData={clearSetupData}
                 fetchSetupData={fetchSetupData}
-                errors={errors}
             />
         </div>
     );

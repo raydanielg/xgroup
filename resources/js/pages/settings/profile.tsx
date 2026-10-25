@@ -7,6 +7,8 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useStatusToast } from '@/hooks/use-status-toast';
+import { toastFormErrors } from '@/lib/toast';
 import { edit } from '@/routes/profile';
 import type { Auth } from '@/types';
 import { send } from '@/routes/verification';
@@ -23,6 +25,12 @@ export default function Profile({
     status?: string;
 }) {
     const { auth } = usePage<PageProps>().props;
+
+    useStatusToast(status, {
+        match: 'verification-link-sent',
+        message:
+            'A new verification link has been sent to your email address.',
+    });
 
     return (
         <>
@@ -42,6 +50,7 @@ export default function Profile({
                     options={{
                         preserveScroll: true,
                     }}
+                    onError={toastFormErrors}
                     className="space-y-6"
                 >
                     {({ processing, errors }) => (
@@ -99,14 +108,6 @@ export default function Profile({
                                                 verification email.
                                             </Link>
                                         </p>
-
-                                        {status ===
-                                            'verification-link-sent' && (
-                                            <div className="mt-2 text-sm font-medium text-green-600">
-                                                A new verification link has been
-                                                sent to your email address.
-                                            </div>
-                                        )}
                                     </div>
                                 )}
 

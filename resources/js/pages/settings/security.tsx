@@ -6,6 +6,7 @@ import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { toastFormErrors } from '@/lib/toast';
 import { edit } from '@/routes/security';
 import type { Props as ManagePasskeysProps } from '@/components/manage-passkeys';
 import ManagePasskeys from '@/components/manage-passkeys';
@@ -47,6 +48,8 @@ export default function Security(props: Props) {
                     ]}
                     resetOnSuccess
                     onError={(errors) => {
+                        toastFormErrors(errors);
+
                         if (errors.password) {
                             passwordInput.current?.focus();
                         }

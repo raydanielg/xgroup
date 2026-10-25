@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { toastFormErrors } from '@/lib/toast';
 import { update } from '@/routes/password';
 
 type Props = {
@@ -22,6 +23,7 @@ export default function ResetPassword({ token, email, passwordRules }: Props) {
                 {...update.form()}
                 transform={(data) => ({ ...data, token, email })}
                 resetOnSuccess={['password', 'password_confirmation']}
+                onError={toastFormErrors}
             >
                 {({ processing, errors }) => (
                     <div className="grid gap-6">

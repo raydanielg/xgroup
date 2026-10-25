@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react';
 import { KeyRound } from 'lucide-react';
+import { toast } from 'sonner';
 import { destroy } from '@/actions/Laravel/Passkeys/Http/Controllers/PasskeyRegistrationController';
 import Heading from '@/components/heading';
 import PasskeyItem from '@/components/passkey-item';
@@ -31,7 +32,11 @@ export default function ManagePasskeys(props: Props) {
     const handleDelete = (id: number, onError: () => void) => {
         router.delete(destroy.url(id), {
             preserveScroll: true,
-            onError,
+            onSuccess: () => toast.success('Passkey removed.'),
+            onError: () => {
+                onError();
+                toast.error('Failed to remove the passkey.');
+            },
         });
     };
 
